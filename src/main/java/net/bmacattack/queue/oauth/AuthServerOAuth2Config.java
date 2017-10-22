@@ -1,5 +1,6 @@
 package net.bmacattack.queue.oauth;
 
+import net.bmacattack.queue.security.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,9 @@ public class AuthServerOAuth2Config
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private CustomUserDetailService userDetailService;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -70,9 +74,9 @@ public class AuthServerOAuth2Config
                 .tokenStore(tokenStore())
                 .authorizationCodeServices(authorizationCodeServices())
                 .authenticationManager(authenticationManager)
-                .tokenStore(tokenStore());
+                .tokenStore(tokenStore())
+                .userDetailsService(userDetailService);
     }
-
     @Bean
     public TokenStore tokenStore() throws Exception {
         return new JdbcTokenStore(dataSource);

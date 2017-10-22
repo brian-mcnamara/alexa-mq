@@ -5,14 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
-public class OauthClientDto implements ClientDetails {
-    @NotNull
-    private String clientId;
-
+public class OauthClientDto extends MinimalOauthClient implements ClientDetails {
     @NotNull
     private String resourceIds;
 
@@ -21,17 +19,6 @@ public class OauthClientDto implements ClientDetails {
 
     @NotNull
     private String grantTypes;
-
-    @NotNull
-    private String redirectUrls;
-
-    @NotNull
-    private String scopes;
-
-    @Override
-    public String getClientId() {
-        return clientId;
-    }
 
     @Override
     public Set<String> getResourceIds() {
