@@ -46,7 +46,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll();
-        http.csrf().ignoringAntMatchers("/admin/**/*", "/api/*");
+        http.csrf().ignoringAntMatchers("/admin/**/*");
         if (disableCSRT) {
             http.csrf().disable();
         }

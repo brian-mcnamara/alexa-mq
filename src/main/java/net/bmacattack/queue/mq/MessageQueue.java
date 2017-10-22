@@ -42,7 +42,7 @@ public class MessageQueue {
             if (destinationMap.containsKey(destination)) {
                 Queue<MessageQueueItem> queue = destinationMap.get(destination);
                 List<MessageQueueItem> items = queue.stream()
-                        .filter(MessageQueueItem::hasExpiered).collect(Collectors.toList());
+                        .filter(mq -> !mq.hasExpiered()).collect(Collectors.toList());
                 queue.clear();
                 return items;
             }
