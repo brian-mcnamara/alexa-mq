@@ -15,6 +15,7 @@ public class MessageQueueItem {
         this.message = message;
     }
 
+    @JsonIgnore
     public LocalDateTime getExperationDate() {
         return experationDate;
     }

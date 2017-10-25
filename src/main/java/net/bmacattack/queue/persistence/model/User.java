@@ -1,9 +1,10 @@
 package net.bmacattack.queue.persistence.model;
 
 import net.bmacattack.queue.persistence.PrivilegeEnum;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +23,24 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private PrivilegeEnum role;
+
+    private String accessTokens;
+
+    public Set<String> getAccessTokens() {
+        return StringUtils.commaDelimitedListToSet(accessTokens);
+    }
+
+    public void deleteAccessToken(String accessToken) {
+        Set<String> tokens = StringUtils.commaDelimitedListToSet(accessTokens);
+        tokens.remove(accessToken);
+        accessTokens = StringUtils.collectionToCommaDelimitedString(tokens);
+    }
+
+    public void addAccessToken(String accessToken) {
+        Set<String> tokens = StringUtils.commaDelimitedListToSet(accessTokens);
+        tokens.add(accessToken);
+        accessTokens = StringUtils.collectionToCommaDelimitedString(tokens);
+    }
 
     public String getEmail() {
         return email;

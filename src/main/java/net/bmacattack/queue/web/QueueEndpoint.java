@@ -29,7 +29,7 @@ public class QueueEndpoint {
 
     @RequestMapping(value = "/api/queue/{destination}", method = RequestMethod.GET)
     @ResponseBody
-    @PreAuthorize("#oauth2.hasScope('Read')")
+    //@PreAuthorize("hasRole('ADMIN'} or #oauth2.hasScope('Read')")
     public List<MessageQueueItem> getMessageQueueItems(@PathVariable("destination") String destination, Principal principal) {
         String username = principal.getName();
         return queue.getMessages(username, destination);

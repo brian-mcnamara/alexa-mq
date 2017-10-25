@@ -9,15 +9,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Configuration
-//@Order(2)
-public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(10)
+public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserAuthenticationProvider userAuthenticationProvider;

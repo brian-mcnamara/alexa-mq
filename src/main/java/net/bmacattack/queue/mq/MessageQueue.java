@@ -1,15 +1,10 @@
 package net.bmacattack.queue.mq;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
-import net.bmacattack.queue.persistence.model.User;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.SynchronousQueue;
 import java.util.stream.Collectors;
 
 @Component
