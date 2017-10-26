@@ -1,9 +1,12 @@
 package net.bmacattack.queue.persistence.model;
 
 import net.bmacattack.queue.persistence.PrivilegeEnum;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,22 +27,24 @@ public class User {
     @Enumerated(EnumType.STRING)
     private PrivilegeEnum role;
 
-    private String accessTokens;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="accessTokens", joinColumns=@JoinColumn(name="user_id"))
+    private List<UserAccessToken> accessTokens;
 
-    public Set<String> getAccessTokens() {
-        return StringUtils.commaDelimitedListToSet(accessTokens);
+    public List<UserAccessToken> getAccessTokens() {
+        return accessTokens;
     }
 
     public void deleteAccessToken(String accessToken) {
-        Set<String> tokens = StringUtils.commaDelimitedListToSet(accessTokens);
-        tokens.remove(accessToken);
-        accessTokens = StringUtils.collectionToCommaDelimitedString(tokens);
+        //todo
     }
 
-    public void addAccessToken(String accessToken) {
-        Set<String> tokens = StringUtils.commaDelimitedListToSet(accessTokens);
-        tokens.add(accessToken);
-        accessTokens = StringUtils.collectionToCommaDelimitedString(tokens);
+    public void addAccessToken(UserAccessToken token) {
+        accessTokens.add(token);
+    }
+
+    public void setAccessTokens(List<UserAccessToken> accessTokens) {
+        this.accessTokens = accessTokens;
     }
 
     public String getEmail() {
