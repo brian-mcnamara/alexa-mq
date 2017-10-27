@@ -33,6 +33,8 @@ public class tokenBaseApiServerConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .requestMatcher(ApiServerConfig.API_PATH_MATCHER).httpBasic()
                 .and()
+                .antMatcher("/queue/**").httpBasic()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(userTokenAuthentication).authorizeRequests().anyRequest().fullyAuthenticated();

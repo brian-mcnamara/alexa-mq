@@ -1,8 +1,10 @@
 package net.bmacattack.queue.mq;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,6 +13,9 @@ import java.util.stream.Collectors;
 @Scope("singleton")
 public class MessageQueue {
     private Map<String, Map<String, Queue<MessageQueueItem>>> mq = new HashMap<>();
+
+    @Autowired
+    private MessageQueueListener eventListener;
 
     public synchronized void addMessage(String user, String destination, String message) {
         Map<String, Queue<MessageQueueItem>> destinationMap;
@@ -26,9 +31,16 @@ public class MessageQueue {
             queue = destinationMap.get(destination);
         }
 
-        queue.add(new MessageQueueItem(LocalDateTime.now().plusSeconds(15), destination, message));
+        MessageQueueItem item = new MessageQueueItem(LocalDateTime.now().plusSeconds(15), destination, message);
+
+        queue.add(item);
         destinationMap.put(destination, queue);
         mq.put(user, destinationMap);
+        try {
+            eventListener.messageEventHandler(new MessageEvent(this, item));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public synchronized List<MessageQueueItem> getMessages(String user, String destination) {
