@@ -6,11 +6,13 @@ import net.bmacattack.queue.mq.MessageQueueListener;
 import net.bmacattack.queue.web.dto.QueueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -41,9 +43,14 @@ public class QueueEndpoint {
     }
 
     @RequestMapping(value = "/queue/{destination}", method = RequestMethod.GET)
-    public SseEmitter getQueueEmitter(@PathVariable("destination") String destination, Principal principal) {
-        SseEmitter emitter = new SseEmitter();
+    public SseEmitter getQueueEmitter(@PathVariable("destination") String destination, Principal principal) throws IOException {
+        SseEmitter emitter = new SseEmitter(60000L);
         eventListener.registerEmiter(destination, emitter);
+        String username = principal.getName();
+        List<MessageQueueItem> queueList = queue.getMessages(username, destination);
+        for (MessageQueueItem item : queueList) {
+            emitter.send(item);
+        }
         return emitter;
     }
 }
