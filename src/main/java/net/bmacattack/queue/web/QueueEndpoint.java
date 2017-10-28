@@ -6,11 +6,14 @@ import net.bmacattack.queue.mq.MessageQueueListener;
 import net.bmacattack.queue.web.dto.QueueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.MessageHandler;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -43,14 +46,16 @@ public class QueueEndpoint {
     }
 
     @RequestMapping(value = "/queue/{destination}", method = RequestMethod.GET)
-    public SseEmitter getQueueEmitter(@PathVariable("destination") String destination, Principal principal) throws IOException {
-        SseEmitter emitter = new SseEmitter(60000L);
-        eventListener.registerEmiter(destination, emitter);
-        String username = principal.getName();
-        List<MessageQueueItem> queueList = queue.getMessages(username, destination);
-        for (MessageQueueItem item : queueList) {
-            emitter.send(item);
-        }
-        return emitter;
+    public Flux<MessageQueueItem> getQueueEmitter(@PathVariable("destination") String destination, Principal principal) throws IOException {
+        return Flux.create((sync) -> {
+            MessageHandler messageHandler = msg -> sync.next(MessageQueueItem.class.cast(msg.getPayload()));
+            sync.onDispose(() -> eventListener.unsubscribe(destination));
+            String username = principal.getName();
+            List<MessageQueueItem> queueList = queue.getMessages(username, destination);
+            for (MessageQueueItem item : queueList) {
+                messageHandler.handleMessage(new GenericMessage<MessageQueueItem>(item));
+            }
+            eventListener.subscribe(destination, messageHandler);
+        });
     }
 }
