@@ -2,7 +2,6 @@ package net.bmacattack.queue.mq;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class MessageQueue {
         destinationMap.put(destination, queue);
         mq.put(user, destinationMap);
         try {
-            eventListener.messageEventHandler(new GenericMessage<>(item));
+            eventListener.messageEventHandler(new MessageEvent(this, item));
         } catch (IOException e) {
             e.printStackTrace();
         }

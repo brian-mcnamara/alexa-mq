@@ -1,34 +1,28 @@
 package net.bmacattack.queue.mq;
 
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-//TODO make this better with multiple subscribers...
 public class MessageQueueListener {
-    private Map<String, MessageHandler> emitterMap = new HashMap<>();
+    private Map<String, SseEmitter> emitterMap = new HashMap<>();
     @EventListener
-    public void messageEventHandler(Message<MessageQueueItem> event) throws IOException {
-        String destination = event.getPayload().getDestination();
-        MessageHandler emitter = emitterMap.get(destination);
+    public void messageEventHandler(MessageEvent event) throws IOException {
+        String destination = event.getItem().getDestination();
+        SseEmitter emitter = emitterMap.get(destination);
         if (emitter == null) {
             //todo error handle
             return;
         }
-        emitter.handleMessage(event);
+        emitter.send(event.getItem());
     }
 
-    public void subscribe(String destination, MessageHandler handler) {
-        emitterMap.put(destination, handler);
-    }
-
-    public void unsubscribe(String destination) {
-        emitterMap.remove(destination);
+    public void registerEmiter(String destination, SseEmitter emitter) {
+        emitterMap.put(destination, emitter);
     }
 }
