@@ -1,6 +1,6 @@
 package net.bmacattack.queue.security;
 
-import net.bmacattack.queue.persistence.PrivilegeEnum;
+import net.bmacattack.queue.persistence.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +41,7 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/login", "/register").permitAll()
-                .antMatchers("/admin/**/*").hasAuthority(PrivilegeEnum.ADMIN.toString())
+                .antMatchers("/admin/**/*").hasAuthority(RoleEnum.ADMIN.toString())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll();

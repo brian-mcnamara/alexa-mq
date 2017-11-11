@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="connectedMQ" />
         <module name="smarthub" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
+      <module name="connectedMQ" target="1.8" />
       <module name="smarthub" target="1.8" />
     </bytecodeTargetLevel>
   </component>

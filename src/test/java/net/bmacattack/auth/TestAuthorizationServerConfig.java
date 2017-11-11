@@ -1,6 +1,6 @@
 package net.bmacattack.auth;
 
-import net.bmacattack.queue.persistence.PrivilegeEnum;
+import net.bmacattack.queue.persistence.RoleEnum;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -15,7 +15,7 @@ public class TestAuthorizationServerConfig extends AuthorizationServerConfigurer
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient(TEST_CLIENT_ID)
                 .authorizedGrantTypes("authorization_code")
-                .authorities(PrivilegeEnum.ADMIN.toString())
+                .authorities(RoleEnum.ADMIN.toString())
                 .scopes("Write")
                 .secret(TEST_CLIENT_SECRET)
                 .accessTokenValiditySeconds(60)

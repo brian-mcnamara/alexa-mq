@@ -1,45 +1,20 @@
 package net.bmacattack.queue.security;
 
-import net.bmacattack.queue.persistence.dao.UserRepository;
-import net.bmacattack.queue.persistence.model.User;
-import net.bmacattack.queue.persistence.model.UserAccessToken;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.Set;
 
-@Component
-public class UserTokenAuthentication implements AuthenticationProvider {
 
-    @Autowired
-    private UserRepository userRepository;
+public class UserTokenAuthentication extends UsernamePasswordAuthenticationToken {
 
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        Object token = authentication.getCredentials();
-        User user = userRepository.getUserByUsername(username);
-        if (user != null) {
-            //TODO tokens ever return null?
-            boolean hasToken = user.getAccessTokens().stream()
-                    .map(UserAccessToken::getAccessToken)
-                    .anyMatch(token::equals);
-            if (hasToken) {
-                return new UsernamePasswordAuthenticationToken(username, authentication.getCredentials(),
-                        Collections.singleton(new SimpleGrantedAuthority(user.getRole().toString())));
-            }
-        }
-        throw new BadCredentialsException("Invalid basic authentication");
+    private Set<String> priviledges;
+
+    public UserTokenAuthentication(Object principal, Object credentials, Set<String> priviledges) {
+        super(principal, credentials, null);
+        this.priviledges = priviledges;
     }
 
-    @Override
-    public boolean supports(Class<?> aClass) {
-        return aClass.equals(UsernamePasswordAuthenticationToken.class);
+    public Set<String> getScope() {
+        return priviledges;
     }
 }

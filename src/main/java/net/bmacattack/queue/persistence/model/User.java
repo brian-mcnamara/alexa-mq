@@ -1,13 +1,9 @@
 package net.bmacattack.queue.persistence.model;
 
-import net.bmacattack.queue.persistence.PrivilegeEnum;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.springframework.util.StringUtils;
+import net.bmacattack.queue.persistence.RoleEnum;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -25,7 +21,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private PrivilegeEnum role;
+    private RoleEnum role;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="accessTokens", joinColumns=@JoinColumn(name="user_id"))
@@ -71,11 +67,11 @@ public class User {
         this.password = password;
     }
 
-    public PrivilegeEnum getRole() {
+    public RoleEnum getRole() {
         return role;
     }
 
-    public void setRole(PrivilegeEnum role) {
+    public void setRole(RoleEnum role) {
         this.role = role;
     }
 

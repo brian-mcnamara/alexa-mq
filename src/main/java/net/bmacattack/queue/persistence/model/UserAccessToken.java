@@ -33,6 +33,7 @@ public class UserAccessToken {
     }
 
     public void addRight(String access) {
+        if (access.contains(",")) throw new IllegalArgumentException("Cant add comma in access: " + access);
         Set<String> rights = StringUtils.commaDelimitedListToSet(accessRights);
         rights.add(access);
         accessRights = StringUtils.collectionToCommaDelimitedString(rights);

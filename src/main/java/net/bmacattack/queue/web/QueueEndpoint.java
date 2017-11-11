@@ -26,7 +26,7 @@ public class QueueEndpoint {
     private MessageQueueListener eventListener;
 
     @RequestMapping(value = "/api/queue", method = RequestMethod.POST)
-    @PreAuthorize("#oauth2.hasScope('Write')")
+    @PreAuthorize("hasPermission(#queueDto, 'Write')")
     @ResponseStatus(value = HttpStatus.OK)
     public void enqueueMessage(@RequestBody QueueDto queueDto, Principal principal) {
         String username = principal.getName();
@@ -36,13 +36,14 @@ public class QueueEndpoint {
 
     @RequestMapping(value = "/api/queue/{destination}", method = RequestMethod.GET)
     @ResponseBody
-    //@PreAuthorize("hasRole('ADMIN'} or #oauth2.hasScope('Read')")
+    @PreAuthorize("hasPermission(#destination, 'Read')")
     public List<MessageQueueItem> getMessageQueueItems(@PathVariable("destination") String destination, Principal principal) {
         String username = principal.getName();
         return queue.getMessages(username, destination);
     }
 
-    @RequestMapping(value = "/queue/{destination}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/stream/queue/{destination}", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(#destination, 'Read')")
     public SseEmitter getQueueEmitter(@PathVariable("destination") String destination, Principal principal) throws IOException {
         SseEmitter emitter = new SseEmitter(50000L);
         eventListener.registerEmiter(destination, emitter);

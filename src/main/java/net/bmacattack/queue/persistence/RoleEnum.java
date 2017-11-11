@@ -1,6 +1,6 @@
 package net.bmacattack.queue.persistence;
 
-public enum PrivilegeEnum {
+public enum RoleEnum {
     ADMIN,
     USER;
 }
