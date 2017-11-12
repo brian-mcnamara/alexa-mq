@@ -52,6 +52,16 @@ public class QueueEndpoint {
         for (MessageQueueItem item : queueList) {
             emitter.send(item);
         }
+        emitter.onTimeout(() -> {
+            eventListener.unregisterEmiter(emitter);
+        });
+        emitter.onCompletion(() -> {
+            eventListener.unregisterEmiter(emitter);
+        });
+        emitter.onError((e) -> {
+            e.printStackTrace();
+            eventListener.unregisterEmiter(emitter);
+        });
         return emitter;
     }
 }

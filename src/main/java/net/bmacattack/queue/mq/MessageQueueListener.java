@@ -25,4 +25,12 @@ public class MessageQueueListener {
     public void registerEmiter(String destination, SseEmitter emitter) {
         emitterMap.put(destination, emitter);
     }
+
+    public void unregisterEmiter(SseEmitter emitter) {
+        Map.Entry<String, SseEmitter> emiterEntry = emitterMap.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(emitter)).findFirst().orElse(null);
+        if (emiterEntry != null) {
+            emitterMap.remove(emiterEntry.getKey());
+        }
+    }
 }
