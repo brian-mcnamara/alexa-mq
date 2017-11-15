@@ -42,20 +42,12 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/login", "/register").permitAll()
+                .antMatchers("/login", "/register", "/index.html", "/static/**", "/logout", "favicon.ico", "/").permitAll()
                 .and().authorizeRequests()
                 .antMatchers("/admin/**/*").hasAuthority(RoleEnum.ADMIN.toString())
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-
-    private static class BasicRequestMatcher implements RequestMatcher {
-        @Override
-        public boolean matches(HttpServletRequest request) {
-            String auth = request.getHeader("Authorization");
-            return (auth != null && auth.startsWith("Basic"));
-        }
     }
 }

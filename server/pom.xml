@@ -155,7 +155,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>src/main/resources/public</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}/public</outputDirectory>
                             <overwrite>true</overwrite>
                             <resources>
                                 <resource>

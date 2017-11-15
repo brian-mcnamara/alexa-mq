@@ -15,15 +15,8 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-
-
     @Bean
     public RequestContextListener requestContextListener() {
         return new RequestContextListener();
-    }
-
-    @RequestMapping("/")
-    public String home() {
-        return "Hello World";
     }
 }

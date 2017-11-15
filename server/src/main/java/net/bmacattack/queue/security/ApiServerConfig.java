@@ -42,18 +42,8 @@ public class ApiServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http/*.requestMatcher(request -> {
-            boolean pathMatches = API_PATH_MATCHER.matches(request);
-            if (pathMatches) {
-                String authorization = request.getHeader("authorization");
-                if (authorization != null && authorization.startsWith(OAuth2AccessToken.BEARER_TYPE)) {
-                    authorization = authorization.replace(OAuth2AccessToken.BEARER_TYPE + " ", "");
-                    return JWT_PATTERN.matcher(authorization).matches();
-                }
-            }
-            return false;
-        }).authenticationProvider(jwtAuthenticationProvider).authorizeRequests()*/
-                //.and()
+        http.authorizeRequests().antMatchers("/index.html", "/static/**").permitAll()
+                .and()
                 .requestMatcher(request -> {
                     boolean pathMatches = API_PATH_MATCHER.matches(request);
                     return pathMatches && request.getHeader("authorization").startsWith(OAuth2AccessToken.BEARER_TYPE);

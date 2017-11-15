@@ -16,7 +16,6 @@ export default {
   // Send a request to the login URL and save the returned JWT
   login(context, creds, redirect) {
     axios.post(LOGIN_URL, creds).then((data) => {
-    debugger
       localStorage.setItem('id_token', data.headers.authorization)
 
       this.user.authenticated = true
@@ -51,20 +50,27 @@ export default {
   logout() {
     localStorage.removeItem('id_token')
     this.user.authenticated = false
-    router.go('/login')
+    router.push('/login')
   },
 
   checkAuth() {
     var jwt = localStorage.getItem('id_token')
-    var decoded = jwtDecode(jwt)
-    if(jwt && decoded && decoded.exp > Math.floor(new Date().getTime() / 1000)) {
-      this.user.authenticated = true
-      axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`
-      return true
+    if(jwt) {
+      try {
+        var decoded = jwtDecode(jwt)
+        if (decoded && decoded.exp > Math.floor(new Date().getTime() / 1000)){
+          this.user.authenticated = true
+          axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`
+          return true
+        }
+      } catch (e) {
+        this.logout();
+        return false;
+      }
     }
     else {
       this.user.authenticated = false
-      logout()
+      this.logout()
       return false
     }
   },
