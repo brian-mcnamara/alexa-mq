@@ -2,7 +2,7 @@
   <div class="tokens">
     <button @click="createToken" class="create btn btn-primary">Create token</button>
     <div :is="createTokenForm"></div>
-    <b-table :items="tokens" :fields="fieldss">
+    <b-table :items="tokens" :fields="fieldList">
         <template slot="delete" slot-scope="row" :deleteToken="deleteToken">
           <button type="button" class="close" aria-label="Remove" @click="deleteToken(row)">
             <span aria-hidden="true">&times;</span>
@@ -23,7 +23,7 @@
     data () {
       return {
         'tokens': tokens,
-        'fieldss': ['name', 'accessToken', 'rights', 'delete'],
+        'fieldList': ['name', 'accessToken', 'rights', 'delete'],
         createTokenForm: null
       }
     },
