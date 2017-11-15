@@ -17,9 +17,13 @@ module.exports = {
         changeOrigin: true
       },
       '/login': {
-              target: 'http://localhost:8081',
-              changeOrigin: true
-            },
+        target: 'http://localhost:8081',
+        changeOrigin: true
+      },
+      '/register': {
+        target: 'http://localhost:8081',
+        changeOrigin: true
+      },
     },
 
     // Various Dev Server settings

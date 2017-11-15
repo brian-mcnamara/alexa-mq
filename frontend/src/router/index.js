@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Tokens from '@/components/Tokens'
 import Login from '@/components/Login'
+import Register from '@/components/Register'
 import Auth from '../auth'
 
 Vue.use(Router)
@@ -21,20 +22,29 @@ let routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    title: 'Register',
+    component: Register,
+    meta: {
+      requiresAuth: false
+    }
   }
 ]
 
-var router = new Router({routes});
+var router = new Router({routes})
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)
-        && !Auth.checkAuth()) {
-        next({path : '/login', query: {
-          redirect: to.fullPath
+  if (to.matched.some(record => record.meta.requiresAuth) && !Auth.checkAuth()) {
+    next({path: '/login',
+      query: {
+        redirect: to.fullPath
       }})
-   } else {
-      next();
-   }
+  } else {
+    next()
+  }
 })
 
 export default router

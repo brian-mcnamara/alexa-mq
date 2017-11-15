@@ -28,7 +28,7 @@
 <script>
   import auth from '../auth'
   export default {
-    data() {
+    data () {
       return {
         // We need to initialize the component with any
         // properties that will be used in it
@@ -40,7 +40,7 @@
       }
     },
     methods: {
-      submit() {
+      submit () {
         var credentials = {
           username: this.credentials.username,
           password: this.credentials.password

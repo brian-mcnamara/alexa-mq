@@ -8,7 +8,7 @@
 
     <b-collapse is-nav id="nav_collapse">
 
-      <b-navbar-nav v-for="route in routes">
+      <b-navbar-nav v-for="route in routes" :key="route.name">
         <b-nav-item :href="'#' +route.path">{{ route.title }}</b-nav-item>
         <!--<b-nav-item href="#" disabled>Disabled</b-nav-item>-->
       </b-navbar-nav>

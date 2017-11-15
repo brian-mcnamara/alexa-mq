@@ -3,6 +3,7 @@ package net.bmacattack.queue.persistence.model;
 import net.bmacattack.queue.persistence.RoleEnum;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,18 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="accessTokens", joinColumns=@JoinColumn(name="user_id"))
     private List<UserAccessToken> accessTokens;
+
+    public User() {
+    }
+
+    public User(String username, String email, String password, RoleEnum role) {
+
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.accessTokens = new ArrayList<>();
+    }
 
     public List<UserAccessToken> getAccessTokens() {
         return accessTokens;

@@ -15,25 +15,25 @@
 import axios from 'axios'
 var name = ''
 var scopes = ''
-  export default {
-    name: 'AddToken',
-    data () {
-      return {
-        name: name,
-        scopes: scopes,
-        submitted: false
-      }
-    },
-    methods: {
-      submit: function() {
-        axios.post('/api/tokens/create', {
-          name: this.name,
-          scopes: this.scopes
-        }).then(res => {
-          this.submitted = true
-          this.token = res.data
-        })
-      }
+export default {
+  name: 'AddToken',
+  data () {
+    return {
+      name: name,
+      scopes: scopes,
+      submitted: false
+    }
+  },
+  methods: {
+    submit: function () {
+      axios.post('/api/tokens/create', {
+        name: this.name,
+        scopes: this.scopes
+      }).then(res => {
+        this.submitted = true
+        this.token = res.data
+      })
     }
   }
+}
 </script>

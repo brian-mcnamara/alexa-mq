@@ -2,7 +2,7 @@
   <div class="tokens">
     <button @click="createToken" class="create btn btn-primary">Create token</button>
     <div :is="createTokenForm"></div>
-    <b-table :items="tokens" :fields="fields">
+    <b-table :items="tokens" :fields="fieldss">
         <template slot="delete" slot-scope="row" :deleteToken="deleteToken">
           <button type="button" class="close" aria-label="Remove" @click="deleteToken(row)">
             <span aria-hidden="true">&times;</span>
@@ -16,43 +16,41 @@
   import axios from 'axios'
   import auth from '../auth'
   import CreateToken from '@/components/AddToken'
-  var tokens = [];
-  const fields = ['name', 'accessToken', 'rights', 'delete']
+  var tokens = []
 
   export default {
     name: 'Tokens',
     data () {
       return {
-        tokens: tokens,
-        fields: fields,
+        'tokens': tokens,
+        'fieldss': ['name', 'accessToken', 'rights', 'delete'],
         createTokenForm: null
       }
     },
     created () {
       axios.get('/api/tokens').then((res) => {
         this.tokens = res.data
-      });
+      })
     },
     route: {
-      canActivate() {
+      canActivate () {
         return auth.checkAuth()
       }
     },
     methods: {
-      deleteToken: function(event) {
+      deleteToken: function (event) {
         var c = confirm(`About to delete ${event.item.name}. Are you sure?`)
         if (c) {
           var that = this
           axios.post(`/api/tokens/remove/${event.item.name}`).then(res => {
-          debugger
             var index = that.tokens.indexOf(event.item)
             that.tokens.splice(index, 1)
           }).catch(e => {
-            debugger
+            console.log(e)
           })
         }
       },
-      createToken: function() {
+      createToken: function () {
         this.createTokenForm = CreateToken
       }
     }
