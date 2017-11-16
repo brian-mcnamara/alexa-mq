@@ -75,7 +75,7 @@ export default {
 
             }).then(resp => {
               if (resp.status === 201) {
-                router.next('/login')
+                router.push('/login')
               }
             })
           }
