@@ -1,8 +1,6 @@
 package net.bmacattack.queue.web;
 
-import net.bmacattack.queue.mq.MessageQueue;
-import net.bmacattack.queue.mq.MessageQueueItem;
-import net.bmacattack.queue.mq.MessageQueueListener;
+import net.bmacattack.queue.mq.*;
 import net.bmacattack.queue.web.dto.QueueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +21,7 @@ public class QueueEndpoint {
     private MessageQueue queue;
 
     @Autowired
-    private MessageQueueListener eventListener;
+    private UserQueueRepository queueRepository;
 
     @RequestMapping(value = "/api/queue", method = RequestMethod.POST)
     @PreAuthorize("hasPermission(#queueDto, 'Write')")
@@ -45,22 +43,23 @@ public class QueueEndpoint {
     @RequestMapping(value = "/api/stream/queue/{destination}", method = RequestMethod.GET)
     @PreAuthorize("hasPermission(#destination, 'Read')")
     public SseEmitter getQueueEmitter(@PathVariable("destination") String destination, Principal principal) throws IOException {
-        SseEmitter emitter = new SseEmitter(50000L);
-        eventListener.registerEmiter(destination, emitter);
         String username = principal.getName();
+        SseEmitter emitter = new SseEmitter(50000L);
+        UserQueueItem queueItem = queueRepository.getQueueForUser(username);
+        queueItem.registerStream(destination, emitter);
         List<MessageQueueItem> queueList = queue.getMessages(username, destination);
         for (MessageQueueItem item : queueList) {
             emitter.send(item);
         }
         emitter.onTimeout(() -> {
-            eventListener.unregisterEmiter(emitter);
+            queueItem.unregisterStream(emitter);
         });
         emitter.onCompletion(() -> {
-            eventListener.unregisterEmiter(emitter);
+            queueItem.unregisterStream(emitter);
         });
         emitter.onError((e) -> {
             e.printStackTrace();
-            eventListener.unregisterEmiter(emitter);
+            queueItem.unregisterStream(emitter);
         });
         return emitter;
     }
