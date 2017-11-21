@@ -1,4 +1,4 @@
-package net.bmacattack.queue.security;
+package net.bmacattack.queue.security.authentication;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 

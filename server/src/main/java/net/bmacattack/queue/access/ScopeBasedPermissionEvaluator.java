@@ -1,6 +1,6 @@
 package net.bmacattack.queue.access;
 
-import net.bmacattack.queue.security.UserTokenAuthentication;
+import net.bmacattack.queue.security.authentication.UserTokenAuthentication;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;

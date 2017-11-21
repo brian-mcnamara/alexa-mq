@@ -1,10 +1,12 @@
 package net.bmacattack.queue.web;
 
-import net.bmacattack.queue.mq.*;
+import net.bmacattack.queue.mq.MessageQueue;
+import net.bmacattack.queue.mq.MessageQueueItem;
+import net.bmacattack.queue.mq.UserQueueItem;
+import net.bmacattack.queue.mq.UserQueueRepository;
 import net.bmacattack.queue.web.dto.QueueDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +26,8 @@ public class QueueEndpoint {
     private UserQueueRepository queueRepository;
 
     @RequestMapping(value = "/api/queue", method = RequestMethod.POST)
-    @PreAuthorize("hasPermission(#queueDto, 'Write')")
-    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#queueDto, 'Write') or hasRole('ADMIN')")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public void enqueueMessage(@RequestBody QueueDto queueDto, Principal principal) {
         String username = principal.getName();
         queue.addMessage(username, queueDto.getDestination(), queueDto.getMessage());
@@ -34,7 +36,7 @@ public class QueueEndpoint {
 
     @RequestMapping(value = "/api/queue/{destination}", method = RequestMethod.GET)
     @ResponseBody
-    @PreAuthorize("hasPermission(#destination, 'Read')")
+    @PreAuthorize("hasPermission(#destination, 'Read') or hasRole('ADMIN')")
     public List<MessageQueueItem> getMessageQueueItems(@PathVariable("destination") String destination, Principal principal) {
         String username = principal.getName();
         return queue.getMessages(username, destination);

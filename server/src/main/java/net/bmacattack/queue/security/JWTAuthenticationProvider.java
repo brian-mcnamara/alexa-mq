@@ -1,26 +1,43 @@
 package net.bmacattack.queue.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import net.bmacattack.queue.security.authentication.JwtAuthentication;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 
 public class JWTAuthenticationProvider extends OAuth2AuthenticationManager {
     static final Pattern JWT_PATTERN = Pattern.compile("^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.?[A-Za-z0-9-_.+/=]*$");
+    private final byte[] jwtSecret;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public JWTAuthenticationProvider(byte[] jwtSecret) {
+        this.jwtSecret = jwtSecret;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if (authentication.getPrincipal() instanceof String) {
             String token = (String) authentication.getPrincipal();
             if (JWT_PATTERN.matcher(token).matches()) {
-                String user = Jwts.parser().setSigningKey("TODO".getBytes())
-                        .parseClaimsJws((String) authentication.getPrincipal())
-                        .getBody().getSubject();
-                return new UsernamePasswordAuthenticationToken(user, null, null);
+                Jws<Claims> jwt = Jwts.parser().setSigningKey(jwtSecret)
+                        .parseClaimsJws((String) authentication.getPrincipal());
+                String user = jwt.getBody().getSubject();
+                String authorities = jwt.getBody().getAudience();
+                try {
+                    return new JwtAuthentication(user, Lists.newArrayList(objectMapper.readValue(authorities, SimpleSerilizedGrantedAuthority[].class)));
+                } catch (IOException e) {
+                    throw new AuthenticationServiceException("Corrupt JWT token", e);
+                }
             }
         }
         return super.authenticate(authentication);

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +20,7 @@ import java.util.List;
 public class OAuth2Client {
 
     @Autowired
-    private JdbcClientDetailsService clientDetailsService;
+    private ClientRegistrationService clientDetailsService;
 
     @RequestMapping(value = "/admin/oauth/register", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)

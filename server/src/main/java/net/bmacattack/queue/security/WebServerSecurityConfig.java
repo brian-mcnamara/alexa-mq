@@ -3,6 +3,7 @@ package net.bmacattack.queue.security;
 import net.bmacattack.queue.persistence.RoleEnum;
 import net.bmacattack.queue.security.filters.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,10 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserAuthenticationProvider userAuthenticationProvider;
+
+    @Autowired
+    @Qualifier("jwtSecret")
+    private byte[] jwtSecret;
 
     @Value("${disableCSRT:false}")
     private Boolean disableCSRT;
@@ -39,11 +44,12 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/login", "/register", "/index.html", "/static/**", "/logout", "favicon.ico", "/").permitAll()
-                .and().authorizeRequests()
+                .and().formLogin().permitAll()
+                .and()
+                .authorizeRequests()
                 .antMatchers("/admin/**/*").hasAuthority(RoleEnum.ADMIN.toString())
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .formLogin().permitAll();
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret));
     }
 }

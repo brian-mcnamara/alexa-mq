@@ -1,8 +1,8 @@
 package net.bmacattack.queue.security;
 
 import net.bmacattack.queue.access.ScopeBasedPermissionEvaluator;
-import net.bmacattack.queue.security.filters.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
@@ -16,10 +16,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.regex.Pattern;
 
 @Configuration
 @EnableResourceServer
@@ -33,11 +30,15 @@ public class ApiServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    @Qualifier("jwtSecret")
+    private byte[] jwtSecret;
+
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId("api");
-        resources.authenticationManager(new JWTAuthenticationProvider());
+        resources.authenticationManager(new JWTAuthenticationProvider(jwtSecret));
     }
 
     @Override
@@ -48,7 +49,6 @@ public class ApiServerConfig extends ResourceServerConfigurerAdapter {
                     boolean pathMatches = API_PATH_MATCHER.matches(request);
                     return pathMatches && request.getHeader("authorization").startsWith(OAuth2AccessToken.BEARER_TYPE);
                 })
-                //.addFilterAt(new JWTAuthorizationFilter(authenticationManager), SecurityContextPersistenceFilter.class)
                 .authorizeRequests()
                 .and()
                 .requestMatcher(ApiServerConfig.API_PATH_MATCHER).httpBasic()

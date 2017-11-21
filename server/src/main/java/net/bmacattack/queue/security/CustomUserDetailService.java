@@ -2,8 +2,8 @@ package net.bmacattack.queue.security;
 
 import net.bmacattack.queue.persistence.dao.UserRepository;
 import net.bmacattack.queue.persistence.model.User;
+import net.bmacattack.queue.security.permission.UserGrant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +15,7 @@ import java.util.Collections;
 public class CustomUserDetailService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
@@ -24,7 +24,7 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("Can not find user");
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole().toString())));
+                Collections.singleton(new UserGrant(user.getRole().toString())));
     }
 
 

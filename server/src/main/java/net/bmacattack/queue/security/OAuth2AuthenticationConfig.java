@@ -1,13 +1,11 @@
 package net.bmacattack.queue.security;
 
-import net.bmacattack.queue.security.CustomUserDetailService;
-import net.bmacattack.queue.security.filters.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -24,7 +22,8 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableAuthorizationServer
-public class AuthServerOAuth2Config
+@Order(0)
+public class OAuth2AuthenticationConfig
         extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
@@ -39,16 +38,6 @@ public class AuthServerOAuth2Config
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Bean
-    public JdbcTokenStore getTokenStore() {
-        return new JdbcTokenStore(dataSource);
-    }
-
-    @Bean
-    public AuthorizationCodeServices authorizationCodeServices() {
-        return new JdbcAuthorizationCodeServices(dataSource);
-    }
 
     @Override
     public void configure(
@@ -85,5 +74,10 @@ public class AuthServerOAuth2Config
         JdbcClientDetailsService clientDetailsService = new JdbcClientDetailsService(dataSource);
         clientDetailsService.setPasswordEncoder(passwordEncoder);
         return clientDetailsService;
+    }
+
+    @Bean
+    public AuthorizationCodeServices authorizationCodeServices() {
+        return new JdbcAuthorizationCodeServices(dataSource);
     }
 }

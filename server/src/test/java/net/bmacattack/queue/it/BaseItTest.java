@@ -1,4 +1,4 @@
-package net.bmacattack.it;
+package net.bmacattack.queue.it;
 
 import net.bmacattack.queue.Application;
 import org.junit.runner.RunWith;
@@ -10,6 +10,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles("dev")
+@ActiveProfiles({"dev", "test"})
 public abstract class BaseItTest {
 }

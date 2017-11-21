@@ -3,17 +3,14 @@ package net.bmacattack.queue.security;
 import net.bmacattack.queue.persistence.dao.UserRepository;
 import net.bmacattack.queue.persistence.model.User;
 import net.bmacattack.queue.persistence.model.UserAccessToken;
+import net.bmacattack.queue.security.authentication.UserTokenAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import javax.transaction.Transactional;
-import java.util.Collections;
 
 @Component
 public class UserTokenAuthenticationProvider implements AuthenticationProvider {
