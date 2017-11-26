@@ -44,12 +44,12 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/login", "/register", "/index.html", "/static/**", "/logout", "favicon.ico", "/").permitAll()
-                .and().formLogin().permitAll()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/admin/**/*").hasAuthority(RoleEnum.ADMIN.toString())
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret));
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+                .formLogin().permitAll();
     }
 }

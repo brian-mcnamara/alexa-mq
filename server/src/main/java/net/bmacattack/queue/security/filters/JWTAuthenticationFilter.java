@@ -1,7 +1,6 @@
 package net.bmacattack.queue.security.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.HttpHeaders;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import net.bmacattack.queue.persistence.model.User;
@@ -41,7 +40,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             exception = e;
         }
         try {
-            if (MediaType.APPLICATION_JSON_VALUE.equals(request.getHeader(HttpHeaders.CONTENT_TYPE))) {
+            if (request.getContentType().startsWith(MediaType.APPLICATION_JSON.toString())) {
                 User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
                 return authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -69,5 +68,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
         response.addHeader(AUTHORIZATION_HEADER, token);
+        super.successfulAuthentication(request, response, chain, authResult);
     }
 }

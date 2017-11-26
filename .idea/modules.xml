@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../AlexaApi/AlexaApi.iml" filepath="$PROJECT_DIR$/../AlexaApi/AlexaApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/connectedMQ.iml" filepath="$PROJECT_DIR$/connectedMQ.iml" />
       <module fileurl="file://$PROJECT_DIR$/frontend/frontend.iml" filepath="$PROJECT_DIR$/frontend/frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
