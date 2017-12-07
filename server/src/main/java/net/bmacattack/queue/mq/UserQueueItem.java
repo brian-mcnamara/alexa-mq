@@ -13,8 +13,8 @@ public class UserQueueItem {
     private Map<String, Queue<MessageQueueItem>> userQueue = new HashMap<>();
     private Multimap<String, SseEmitter> streamClients = HashMultimap.create();
 
-    public void enqueueMessage(String destination, String message) {
-        MessageQueueItem item = new MessageQueueItem(LocalDateTime.now().plusSeconds(15), destination, message);
+    public void enqueueMessage(String destination, String message, Map<String, String > parameters) {
+        MessageQueueItem item = new MessageQueueItem(LocalDateTime.now().plusSeconds(15), destination, message, parameters);
         if (streamClients.containsKey(destination)) {
             for (SseEmitter emitter : streamClients.get(destination)) {
                 try {

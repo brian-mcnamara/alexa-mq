@@ -30,7 +30,7 @@ public class QueueEndpoint {
     @ResponseStatus(value = HttpStatus.CREATED)
     public void enqueueMessage(@RequestBody QueueDto queueDto, Principal principal) {
         String username = principal.getName();
-        queue.addMessage(username, queueDto.getDestination(), queueDto.getMessage());
+        queue.addMessage(username, queueDto.getDestination(), queueDto.getMessage(), queueDto.getParameters());
 
     }
 

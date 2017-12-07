@@ -1,8 +1,11 @@
 package net.bmacattack.queue.web.dto;
 
+import java.util.Map;
+
 public class QueueDto {
     private String destination;
     private String message;
+    private Map<String, String> parameters;
 
     public String getDestination() {
         return destination;
@@ -20,6 +23,15 @@ public class QueueDto {
         this.message = message;
     }
 
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
+
+    //TODO params
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -32,6 +44,7 @@ public class QueueDto {
     }
 
     @Override
+    //TODO params
     public int hashCode() {
         int result = destination.hashCode();
         result = 31 * result + message.hashCode();
