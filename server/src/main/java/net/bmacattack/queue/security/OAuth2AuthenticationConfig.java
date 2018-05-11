@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
@@ -57,12 +58,17 @@ public class OAuth2AuthenticationConfig
     public void configure(
             AuthorizationServerEndpointsConfigurer endpoints)
             throws Exception {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(tokenStore());
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setClientDetailsService(clientDetailsService());
+        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+        tokenServices.setAccessTokenValiditySeconds(7 * 60 * 60 * 24);
+        tokenServices.setAuthenticationManager(authenticationManager);
 
         endpoints
-                .authorizationCodeServices(authorizationCodeServices())
-                .authenticationManager(authenticationManager)
-                .tokenStore(tokenStore())
-                .userDetailsService(userDetailService);
+                .authorizationCodeServices(authorizationCodeServices());
+        endpoints.tokenServices(tokenServices);
     }
     @Bean
     public TokenStore tokenStore() throws Exception {
