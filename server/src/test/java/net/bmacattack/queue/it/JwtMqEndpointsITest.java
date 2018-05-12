@@ -29,7 +29,7 @@ public class JwtMqEndpointsITest extends MqEndpointsITest {
         JSONObject login = new JSONObject();
         login.put("username", "dev");
         login.put("password", "badPassword");
-        String jwt = mockMvc.perform(MockMvcRequestBuilders.post("/login").contentType(MediaType.APPLICATION_JSON).content(login.toString().getBytes()))
+        String jwt = mockMvc.perform(MockMvcRequestBuilders.post("/api/login").contentType(MediaType.APPLICATION_JSON).content(login.toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.UNAUTHORIZED.value())).andReturn().getResponse().getHeader("authorization");
         Assert.assertNull(jwt);
 
@@ -39,7 +39,7 @@ public class JwtMqEndpointsITest extends MqEndpointsITest {
         JSONObject login = new JSONObject();
         login.put("username", "dev");
         login.put("password", "dev");
-        return mockMvc.perform(MockMvcRequestBuilders.post("/login").contentType(MediaType.APPLICATION_JSON).content(login.toString().getBytes()))
+        return mockMvc.perform(MockMvcRequestBuilders.post("/api/login").contentType(MediaType.APPLICATION_JSON).content(login.toString().getBytes()))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getHeader("authorization");
     }

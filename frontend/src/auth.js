@@ -3,7 +3,7 @@ import jwtDecode from 'jwt-decode'
 let axios = require('axios')
 
 // URL and endpoint constants
-const LOGIN_URL = '/login'
+const LOGIN_URL = '/api/login'
 const SIGNUP_URL = 'users/'
 
 export default {

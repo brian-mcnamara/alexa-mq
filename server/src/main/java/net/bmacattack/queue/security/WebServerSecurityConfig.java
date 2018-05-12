@@ -3,7 +3,6 @@ package net.bmacattack.queue.security;
 import net.bmacattack.queue.persistence.RoleEnum;
 import net.bmacattack.queue.security.filters.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +18,6 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserAuthenticationProvider userAuthenticationProvider;
-
-    @Autowired
-    @Qualifier("jwtSecret")
-    private byte[] jwtSecret;
 
     @Value("${disableCSRT:false}")
     private Boolean disableCSRT;
@@ -49,7 +44,7 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**/*").hasAuthority(RoleEnum.ADMIN.toString())
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .formLogin().permitAll();
     }
 }

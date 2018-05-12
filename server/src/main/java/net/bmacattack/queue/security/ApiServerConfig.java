@@ -43,7 +43,7 @@ public class ApiServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/index.html", "/static/**").permitAll()
+        http.authorizeRequests().antMatchers("/index.html", "/static/**", "/api/login").permitAll()
                 .and()
                 .requestMatcher(request -> {
                     boolean pathMatches = API_PATH_MATCHER.matches(request);
