@@ -64,7 +64,8 @@ public class OAuth2AuthenticationConfig
         tokenServices.setClientDetailsService(clientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
         tokenServices.setAccessTokenValiditySeconds(7 * 60 * 60 * 24);
-        tokenServices.setRefreshTokenValiditySeconds(0);
+        tokenServices.setRefreshTokenValiditySeconds(30 * 60 * 60 * 24);
+        tokenServices.setReuseRefreshToken(false);
         tokenServices.setAuthenticationManager(authenticationManager);
 
         endpoints

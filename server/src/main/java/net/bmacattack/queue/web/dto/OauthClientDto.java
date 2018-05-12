@@ -67,7 +67,7 @@ public class OauthClientDto extends MinimalOauthClient implements ClientDetails 
 
     @Override
     public Integer getRefreshTokenValiditySeconds() {
-        return 0;
+        return 30 * 60 * 60 * 24;
     }
 
     @Override
