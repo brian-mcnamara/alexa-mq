@@ -1,7 +1,6 @@
 package net.bmacattack.queue.security;
 
 import net.bmacattack.queue.persistence.RoleEnum;
-import net.bmacattack.queue.security.filters.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +43,7 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**/*").hasAuthority(RoleEnum.ADMIN.toString())
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .formLogin().permitAll();
+
     }
 }

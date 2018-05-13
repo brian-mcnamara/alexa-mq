@@ -2,9 +2,7 @@ package net.bmacattack.queue.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import net.bmacattack.queue.security.authentication.JwtAuthentication;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -29,14 +27,14 @@ public class JWTAuthenticationProvider extends OAuth2AuthenticationManager {
         if (authentication.getPrincipal() instanceof String) {
             String token = (String) authentication.getPrincipal();
             if (JWT_PATTERN.matcher(token).matches()) {
-                Jws<Claims> jwt = Jwts.parser().setSigningKey(jwtSecret)
-                        .parseClaimsJws((String) authentication.getPrincipal());
-                String user = jwt.getBody().getSubject();
-                String authorities = jwt.getBody().getAudience();
                 try {
+                    Jws<Claims> jwt = Jwts.parser().setSigningKey(jwtSecret)
+                            .parseClaimsJws((String) authentication.getPrincipal());
+                    String user = jwt.getBody().getSubject();
+                    String authorities = jwt.getBody().getAudience();
                     return new JwtAuthentication(user, Lists.newArrayList(objectMapper.readValue(authorities, SimpleSerilizedGrantedAuthority[].class)));
-                } catch (IOException e) {
-                    throw new AuthenticationServiceException("Corrupt JWT token", e);
+                } catch (IOException | JwtException e) {
+                    throw new AuthenticationServiceException("Corrupt or expired JWT token", e);
                 }
             }
         }

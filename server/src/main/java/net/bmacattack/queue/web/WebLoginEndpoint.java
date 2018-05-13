@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import net.bmacattack.queue.security.filters.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -33,6 +32,7 @@ public class WebLoginEndpoint {
     @Qualifier("jwtSecret")
     private byte[] jwtSecret;
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/api/login", method = RequestMethod.POST)
@@ -55,7 +55,7 @@ public class WebLoginEndpoint {
                     .setAudience(objectMapper.writeValueAsString(user.getAuthorities()))
                     .signWith(SignatureAlgorithm.HS512, jwtSecret)
                     .compact();
-            response.addHeader(JWTAuthenticationFilter.AUTHORIZATION_HEADER, token);
+            response.addHeader(AUTHORIZATION_HEADER, token);
 
         } catch (AuthenticationException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
