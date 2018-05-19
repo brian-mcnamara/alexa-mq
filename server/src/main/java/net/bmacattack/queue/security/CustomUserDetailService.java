@@ -4,15 +4,17 @@ import net.bmacattack.queue.persistence.dao.UserRepository;
 import net.bmacattack.queue.persistence.model.User;
 import net.bmacattack.queue.security.permission.UserGrant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 
 @Component
-public class CustomUserDetailService implements UserDetailsService {
+public class CustomUserDetailService implements UserDetailsService, AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 
     @Autowired
     protected UserRepository userRepository;
@@ -28,4 +30,8 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
 
+    @Override
+    public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {
+        return this.loadUserByUsername(token.getName());
+    }
 }

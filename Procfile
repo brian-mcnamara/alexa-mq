@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPS -jar server/target/server-1.0-SNAPSHOT.jar
+web: java -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n -Dserver.port=$PORT $JAVA_OPS -jar server/target/server-1.0-SNAPSHOT.jar
