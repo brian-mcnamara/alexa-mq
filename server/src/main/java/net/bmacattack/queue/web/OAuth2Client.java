@@ -22,14 +22,14 @@ public class OAuth2Client {
     @Autowired
     private ClientRegistrationService clientDetailsService;
 
-    @RequestMapping(value = "/admin/oauth/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/oauth/register", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public String registerOauthClient(@Valid OauthClientDto clientDetails, final HttpServletRequest request) {
         clientDetailsService.addClientDetails(clientDetails);
         return "success";
     }
 
-    @RequestMapping(value = "/admin/oauth/clients", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/oauth/clients", method = RequestMethod.GET)
     public String getRegisteredClients() {
         List<ClientDetails> clientDetailsList = clientDetailsService.listClientDetails();
         return "";

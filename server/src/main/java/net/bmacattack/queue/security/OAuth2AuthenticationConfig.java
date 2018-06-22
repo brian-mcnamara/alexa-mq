@@ -1,5 +1,6 @@
 package net.bmacattack.queue.security;
 
+import net.bmacattack.queue.security.service.TokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
@@ -58,7 +58,7 @@ public class OAuth2AuthenticationConfig
     public void configure(
             AuthorizationServerEndpointsConfigurer endpoints)
             throws Exception {
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        TokenServices tokenServices = new TokenServices();
         tokenServices.setTokenStore(tokenStore());
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(clientDetailsService());
