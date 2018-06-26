@@ -47,7 +47,7 @@ public class WebServerSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/admin/**/*").hasAuthority(RoleEnum.ADMIN.toString())
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll();
 
