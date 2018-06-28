@@ -1,12 +1,17 @@
 package net.bmacattack.queue.persistence.model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.Set;
 
 @Embeddable
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserAccessToken {
 
     @Column(nullable = false)

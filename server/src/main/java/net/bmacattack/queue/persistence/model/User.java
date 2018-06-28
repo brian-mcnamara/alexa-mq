@@ -1,6 +1,7 @@
 package net.bmacattack.queue.persistence.model;
 
 import net.bmacattack.queue.persistence.RoleEnum;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
 
     @Id
@@ -26,6 +29,7 @@ public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="accessTokens", joinColumns=@JoinColumn(name="user_id"))
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<UserAccessToken> accessTokens;
 
     public User() {

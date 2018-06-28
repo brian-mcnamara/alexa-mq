@@ -2,6 +2,9 @@ package net.bmacattack.queue.storage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +25,7 @@ import java.util.Properties;
 @ComponentScan({ "net.bmacattack.queue.persistence" })
 @EnableTransactionManagement
 @EntityScan("net.bmacattack.queue.persistence.model")
+@EnableCaching
 public class PersistenceJPAConfig {
 
     @Value("${DATABASE_URL}")
@@ -81,6 +85,11 @@ public class PersistenceJPAConfig {
     @Bean
     public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    @Bean
+    public CacheManager getCacheManager() {
+        return new ConcurrentMapCacheManager();
     }
 
 }
