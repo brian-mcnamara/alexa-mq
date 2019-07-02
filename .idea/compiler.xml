@@ -15,7 +15,7 @@
       <module name="AlexaApi" target="1.8" />
       <module name="connectedMQ" target="1.5" />
       <module name="frontend" target="1.5" />
-      <module name="server" target="1.8" />
+      <module name="server" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

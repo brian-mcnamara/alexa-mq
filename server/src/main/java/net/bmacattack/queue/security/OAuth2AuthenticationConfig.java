@@ -49,19 +49,16 @@ public class OAuth2AuthenticationConfig
     }
 
     @Override
-    public void configure(ClientDetailsServiceConfigurer clients)
-            throws Exception {
-        clients.withClientDetails(clientDetailsService());
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.withClientDetails(jdbcClientDetailsService());
     }
 
     @Override
-    public void configure(
-            AuthorizationServerEndpointsConfigurer endpoints)
-            throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         TokenServices tokenServices = new TokenServices();
         tokenServices.setTokenStore(tokenStore());
         tokenServices.setSupportRefreshToken(true);
-        tokenServices.setClientDetailsService(clientDetailsService());
+        tokenServices.setClientDetailsService(jdbcClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
         tokenServices.setAccessTokenValiditySeconds(7 * 60 * 60 * 24);
         tokenServices.setRefreshTokenValiditySeconds(30 * 60 * 60 * 24);
@@ -73,12 +70,12 @@ public class OAuth2AuthenticationConfig
         endpoints.tokenServices(tokenServices);
     }
     @Bean
-    public TokenStore tokenStore() throws Exception {
+    public TokenStore tokenStore() {
         return new JdbcTokenStore(dataSource);
     }
 
     @Bean
-    public JdbcClientDetailsService clientDetailsService() throws Exception {
+    public JdbcClientDetailsService jdbcClientDetailsService() {
         JdbcClientDetailsService clientDetailsService = new JdbcClientDetailsService(dataSource);
         clientDetailsService.setPasswordEncoder(passwordEncoder);
         return clientDetailsService;
