@@ -6,21 +6,21 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public class MessageQueueItem {
-    private LocalDateTime experationDate;
+    private LocalDateTime expirationDate;
     private String destination;
     private String message;
     private Map<String, String> parameters;
 
-    public MessageQueueItem(LocalDateTime experationDate, String destination, String message, Map<String, String> parameters) {
-        this.experationDate = experationDate;
+    public MessageQueueItem(LocalDateTime expirationDate, String destination, String message, Map<String, String> parameters) {
+        this.expirationDate = expirationDate;
         this.destination = destination;
         this.message = message;
         this.parameters = parameters;
     }
 
     @JsonIgnore
-    public LocalDateTime getExperationDate() {
-        return experationDate;
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
     }
 
     public String getDestination() {
@@ -37,6 +37,6 @@ public class MessageQueueItem {
 
     @JsonIgnore
     public boolean hasExpiered() {
-        return LocalDateTime.now().isAfter(experationDate);
+        return LocalDateTime.now().isAfter(expirationDate);
     }
 }

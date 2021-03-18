@@ -1,5 +1,6 @@
 package net.bmacattack.queue.storage;
 
+import org.postgresql.PGProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cache.CacheManager;
@@ -72,6 +73,10 @@ public class PersistenceJPAConfig {
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
+
+        Properties properties = new Properties();
+        PGProperty.SSL_MODE.set(properties, "prefer");
+        dataSource.setConnectionProperties(properties);
         return dataSource;
     }
 
